@@ -15,7 +15,6 @@ namespace Umbraco.Core.Models.Rdbms
         {
             UserGroupDtos = new List<UserGroupDto>();
             UserStartNodeDtos = new HashSet<UserStartNodeDto>();
-            UserPickerStartNodeDtos = new HashSet<UserPickerStartNodeDto>();
         }
 
         [Column("id")]
@@ -110,8 +109,5 @@ namespace Umbraco.Core.Models.Rdbms
 
         [ResultColumn]
         public HashSet<UserStartNodeDto> UserStartNodeDtos { get; set; }
-
-        [ResultColumn]
-        public HashSet<UserPickerStartNodeDto> UserPickerStartNodeDtos { get; set; }
     }
 }
