@@ -59,6 +59,12 @@ namespace Umbraco.Web.Trees
             get { return _userStartNodes ?? (_userStartNodes = Security.CurrentUser.CalculateContentStartNodeIds(Services.EntityService)); }
         }
 
+        private int[] _userPickerStartNodes;
+        protected override int[] UserPickerStartNodes
+        {
+            get { return _userPickerStartNodes ?? (_userPickerStartNodes = Security.CurrentUser.CalculateContentPickerStartNodeIds(Services.EntityService)); }
+        }
+
         /// <summary>
         /// Creates a tree node for a content item based on an UmbracoEntity
         /// </summary>

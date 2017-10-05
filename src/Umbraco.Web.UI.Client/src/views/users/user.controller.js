@@ -180,12 +180,12 @@
             };
         }
 
-        function openContentPicker() {
+        function openContentPicker(startContentIds) {
             vm.contentPicker = {
                 title: vm.labels.selectContentStartNode,
                 view: "contentpicker",
                 multiPicker: true,
-                selection: vm.user.startContentIds,
+                selection: startContentIds,
                 hideHeader: false,
                 show: true,
                 submit: function (model) {
@@ -196,7 +196,7 @@
                                 item.name = vm.labels.contentRoot;
                                 item.icon = "icon-folder";
                             }
-                            multiSelectItem(item, vm.user.startContentIds);
+                            multiSelectItem(item, startContentIds);
                         });
                     }
                     // close overlay
@@ -211,7 +211,7 @@
             };
         }
 
-        function openMediaPicker() {
+        function openMediaPicker(startMediaIds) {
             vm.mediaPicker = {
                 title: vm.labels.selectMediaStartNode,
                 view: "treepicker",
@@ -229,7 +229,7 @@
                                 item.name = vm.labels.mediaRoot;
                                 item.icon = "icon-folder";
                             }
-                            multiSelectItem(item, vm.user.startMediaIds);
+                            multiSelectItem(item, startMediaIds);
                         });
                     }
                     // close overlay

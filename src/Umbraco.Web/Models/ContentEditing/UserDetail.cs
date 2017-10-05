@@ -55,6 +55,18 @@ namespace Umbraco.Web.Models.ContentEditing
         public int[] StartMediaIds { get; set; }
 
         /// <summary>
+        /// The user's calculated start nodes based on the start nodes they have assigned directly to them and via the groups they're assigned to
+        /// </summary>
+        [DataMember(Name = "startContentPickerIds")]
+        public int[] StartContentPickerIds { get; set; }
+
+        /// <summary>
+        /// The user's calculated start nodes based on the start nodes they have assigned directly to them and via the groups they're assigned to
+        /// </summary>
+        [DataMember(Name = "startMediaPickerIds")]
+        public int[] StartMediaPickerIds { get; set; }
+
+        /// <summary>
         /// Returns a list of different size avatars
         /// </summary>
         [DataMember(Name = "avatars")]

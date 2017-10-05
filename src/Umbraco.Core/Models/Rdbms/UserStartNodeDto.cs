@@ -31,7 +31,9 @@ namespace Umbraco.Core.Models.Rdbms
         public enum StartNodeTypeValue
         {
             Content = 1,
-            Media = 2
+            Media = 2,
+            ContentPicker = 3,
+            MediaPicker = 4
         }
 
         public bool Equals(UserStartNodeDto other)

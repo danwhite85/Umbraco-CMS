@@ -28,6 +28,10 @@ namespace Umbraco.Core.Models.Membership
 
         int[] StartMediaIds { get; set; }
 
+        int[] StartContentPickerIds { get; set; }
+
+        int[] StartMediaPickerIds { get; set; }
+
         string Language { get; set; }
 
         [Obsolete("This should not be used it exists for legacy reasons only, use user groups instead, it will be removed in future versions")]

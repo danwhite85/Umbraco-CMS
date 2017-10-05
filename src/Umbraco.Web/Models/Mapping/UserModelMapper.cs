@@ -77,6 +77,8 @@ namespace Umbraco.Web.Models.Mapping
                 .ForMember(detail => detail.Id, opt => opt.Ignore())
                 .ForMember(detail => detail.StartContentIds, opt => opt.Ignore())
                 .ForMember(detail => detail.StartMediaIds, opt => opt.Ignore())
+                .ForMember(detail => detail.StartContentPickerIds, opt => opt.Ignore())
+                .ForMember(detail => detail.StartMediaPickerIds, opt => opt.Ignore())
                 .ForMember(detail => detail.UserType, opt => opt.Ignore())
                 .ForMember(detail => detail.StartContentId, opt => opt.Ignore())
                 .ForMember(detail => detail.StartMediaId, opt => opt.Ignore())
@@ -267,6 +269,22 @@ namespace Umbraco.Web.Models.Mapping
                         applicationContext.Services.EntityService,
                         UmbracoObjectTypes.Media,
                         "media/mediaRoot")))
+                .ForMember(
+                    detail => detail.StartContentPickerIds,
+                    opt => opt.MapFrom(user => GetStartNodeValues(
+                        user.StartContentPickerIds.ToArray(),
+                        applicationContext.Services.TextService,
+                        applicationContext.Services.EntityService,
+                        UmbracoObjectTypes.Document,
+                        "content/contentRoot")))
+                .ForMember(
+                    detail => detail.StartMediaPickerIds,
+                    opt => opt.MapFrom(user => GetStartNodeValues(
+                        user.StartMediaPickerIds.ToArray(),
+                        applicationContext.Services.TextService,
+                        applicationContext.Services.EntityService,
+                        UmbracoObjectTypes.Media,
+                        "media/mediaRoot")))
                 .ForMember(detail => detail.Culture, opt => opt.MapFrom(user => user.GetUserCulture(applicationContext.Services.TextService)))                
                 .ForMember(
                     detail => detail.AvailableCultures,
@@ -316,6 +334,8 @@ namespace Umbraco.Web.Models.Mapping
                 .ForMember(detail => detail.UserId, opt => opt.MapFrom(user => GetIntId(user.Id)))
                 .ForMember(detail => detail.StartContentIds, opt => opt.MapFrom(user => user.CalculateContentStartNodeIds(applicationContext.Services.EntityService)))
                 .ForMember(detail => detail.StartMediaIds, opt => opt.MapFrom(user => user.CalculateMediaStartNodeIds(applicationContext.Services.EntityService)))
+                .ForMember(detail => detail.StartContentPickerIds, opt => opt.MapFrom(user => user.CalculateContentPickerStartNodeIds(applicationContext.Services.EntityService)))
+                .ForMember(detail => detail.StartMediaPickerIds, opt => opt.MapFrom(user => user.CalculateMediaPickerStartNodeIds(applicationContext.Services.EntityService)))
                 .ForMember(detail => detail.Culture, opt => opt.MapFrom(user => user.GetUserCulture(applicationContext.Services.TextService)))
                 .ForMember(
                     detail => detail.EmailHash,

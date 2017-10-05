@@ -16,7 +16,9 @@ namespace Umbraco.Core.Persistence.Factories
             var user = new User(dto.Id, dto.UserName, dto.Email, dto.Login,dto.Password, 
                 dto.UserGroupDtos.Select(x => x.ToReadOnlyGroup()).ToArray(),
                 dto.UserStartNodeDtos.Where(x => x.StartNodeType == (int)UserStartNodeDto.StartNodeTypeValue.Content).Select(x => x.StartNode).ToArray(),
-                dto.UserStartNodeDtos.Where(x => x.StartNodeType == (int)UserStartNodeDto.StartNodeTypeValue.Media).Select(x => x.StartNode).ToArray());
+                dto.UserStartNodeDtos.Where(x => x.StartNodeType == (int)UserStartNodeDto.StartNodeTypeValue.Media).Select(x => x.StartNode).ToArray(),
+                dto.UserStartNodeDtos.Where(x => x.StartNodeType == (int)UserStartNodeDto.StartNodeTypeValue.ContentPicker).Select(x => x.StartNode).ToArray(),
+                dto.UserStartNodeDtos.Where(x => x.StartNodeType == (int)UserStartNodeDto.StartNodeTypeValue.MediaPicker).Select(x => x.StartNode).ToArray());
 
             try
             {
@@ -88,6 +90,26 @@ namespace Umbraco.Core.Persistence.Factories
                 {
                     StartNode = startNodeId,
                     StartNodeType = (int)UserStartNodeDto.StartNodeTypeValue.Media,
+                    UserId = entity.Id
+                });
+            }
+
+            foreach (var startNodeId in entity.StartContentPickerIds)
+            {
+                dto.UserStartNodeDtos.Add(new UserStartNodeDto
+                {
+                    StartNode = startNodeId,
+                    StartNodeType = (int)UserStartNodeDto.StartNodeTypeValue.ContentPicker,
+                    UserId = entity.Id
+                });
+            }
+
+            foreach (var startNodeId in entity.StartMediaPickerIds)
+            {
+                dto.UserStartNodeDtos.Add(new UserStartNodeDto
+                {
+                    StartNode = startNodeId,
+                    StartNodeType = (int)UserStartNodeDto.StartNodeTypeValue.MediaPicker,
                     UserId = entity.Id
                 });
             }

@@ -64,7 +64,7 @@ namespace Umbraco.Web.Trees
         {
             var node = base.CreateRootNode(queryStrings);
 
-            if (IsDialog(queryStrings) && UserStartNodes.Contains(Constants.System.Root) == false)
+            if (IsDialog(queryStrings) && UserPickerStartNodes.Contains(Constants.System.Root) == false)
             {
                 node.AdditionalData["noAccess"] = true;
             }
@@ -85,7 +85,7 @@ namespace Umbraco.Web.Trees
         internal TreeNode GetSingleTreeNodeWithAccessCheck(IUmbracoEntity e, string parentId, FormDataCollection queryStrings)
         {
             bool hasPathAccess;
-            var entityIsAncestorOfStartNodes = Security.CurrentUser.IsInBranchOfStartNode(e, Services.EntityService, RecycleBinId, out hasPathAccess);
+            var entityIsAncestorOfStartNodes = Security.CurrentUser.IsInBranchOfStartNode(e, Services.EntityService, IsDialog(queryStrings), RecycleBinId, out hasPathAccess);
             if (entityIsAncestorOfStartNodes == false)
                 return null;
 
@@ -111,7 +111,12 @@ namespace Umbraco.Web.Trees
         /// Returns the user's start node for this tree
         /// </summary>
         protected abstract int[] UserStartNodes { get; }
-        
+
+        /// <summary>
+        /// Returns the user's picker start node for this tree
+        /// </summary>
+        protected abstract int[] UserPickerStartNodes { get; }
+
         protected virtual TreeNodeCollection PerformGetTreeNodes(string id, FormDataCollection queryStrings)
         {
             var nodes = new TreeNodeCollection();
@@ -148,7 +153,7 @@ namespace Umbraco.Web.Trees
                 }
             }
 
-            var entities = GetChildEntities(id).ToList();
+            var entities = GetChildEntities(id, queryStrings).ToList();
 
             //If we are looking up the root and there is more than one node ...
             //then we want to lookup those nodes' 'site' nodes and render those so that the
@@ -189,7 +194,7 @@ namespace Umbraco.Web.Trees
 
         protected abstract UmbracoObjectTypes UmbracoObjectType { get; }
 
-        protected IEnumerable<IUmbracoEntity> GetChildEntities(string id)
+        protected IEnumerable<IUmbracoEntity> GetChildEntities(string id, FormDataCollection queryStrings)
         {
             // use helper method to ensure we support both integer and guid lookups
             int iid;
@@ -205,12 +210,14 @@ namespace Umbraco.Web.Trees
                 iid = idEntity.Id;
             }
 
+            int[] _userStartNodes = (IsDialog(queryStrings)) ? UserPickerStartNodes : UserStartNodes;
+
             // if a request is made for the root node but user has no access to
             // root node, return start nodes instead
-            if (iid == Constants.System.Root && UserStartNodes.Contains(Constants.System.Root) == false)
+            if (iid == Constants.System.Root && _userStartNodes.Contains(Constants.System.Root) == false)
             {
-                return UserStartNodes.Length > 0
-                    ? Services.EntityService.GetAll(UmbracoObjectType, UserStartNodes)
+                return _userStartNodes.Length > 0
+                    ? Services.EntityService.GetAll(UmbracoObjectType, _userStartNodes)
                     : Enumerable.Empty<IUmbracoEntity>();
             }
 

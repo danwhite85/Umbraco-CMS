@@ -44,7 +44,13 @@ namespace Umbraco.Web.Models.ContentEditing
         public int[] StartContentIds { get; set; }
 
         [DataMember(Name = "startMediaIds")]
-        public int[] StartMediaIds { get; set; }        
+        public int[] StartMediaIds { get; set; }
+
+        [DataMember(Name = "startContentPickerIds")]
+        public int[] StartContentPickerIds { get; set; }
+
+        [DataMember(Name = "startMediaPickerIds")]
+        public int[] StartMediaPickerIds { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

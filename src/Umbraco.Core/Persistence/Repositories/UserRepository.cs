@@ -334,7 +334,7 @@ ORDER BY colName";
             var id = Convert.ToInt32(Database.Insert(userDto));
             entity.Id = id;
 
-            if (entity.IsPropertyDirty("StartContentIds") || entity.IsPropertyDirty("StartMediaIds"))
+            if (entity.IsPropertyDirty("StartContentIds") || entity.IsPropertyDirty("StartMediaIds") || entity.IsPropertyDirty("StartContentPickerIds") || entity.IsPropertyDirty("StartMediaPickerIds"))
             {
                 if (entity.IsPropertyDirty("StartContentIds"))
                 {
@@ -343,6 +343,14 @@ ORDER BY colName";
                 if (entity.IsPropertyDirty("StartMediaIds"))
                 {
                     AddingOrUpdateStartNodes(entity, Enumerable.Empty<UserStartNodeDto>(), UserStartNodeDto.StartNodeTypeValue.Media, entity.StartMediaIds);
+                }
+                if (entity.IsPropertyDirty("StartContentPickerIds"))
+                {
+                    AddingOrUpdateStartNodes(entity, Enumerable.Empty<UserStartNodeDto>(), UserStartNodeDto.StartNodeTypeValue.ContentPicker, entity.StartContentPickerIds);
+                }
+                if (entity.IsPropertyDirty("StartMediaPickerIds"))
+                {
+                    AddingOrUpdateStartNodes(entity, Enumerable.Empty<UserStartNodeDto>(), UserStartNodeDto.StartNodeTypeValue.MediaPicker, entity.StartMediaPickerIds);
                 }
             }
 
@@ -441,7 +449,7 @@ ORDER BY colName";
                 Database.Update(userDto, changedCols);
             }
 
-            if (entity.IsPropertyDirty("StartContentIds") || entity.IsPropertyDirty("StartMediaIds"))
+            if (entity.IsPropertyDirty("StartContentIds") || entity.IsPropertyDirty("StartMediaIds") || entity.IsPropertyDirty("StartContentPickerIds") || entity.IsPropertyDirty("StartMediaPickerIds"))
             {
                 var assignedStartNodes = Database.Fetch<UserStartNodeDto>("SELECT * FROM umbracoUserStartNode WHERE userId = @userId", new { userId = entity.Id });
                 if (entity.IsPropertyDirty("StartContentIds"))
@@ -451,6 +459,14 @@ ORDER BY colName";
                 if (entity.IsPropertyDirty("StartMediaIds"))
                 {
                     AddingOrUpdateStartNodes(entity, assignedStartNodes, UserStartNodeDto.StartNodeTypeValue.Media, entity.StartMediaIds);
+                }
+                if (entity.IsPropertyDirty("StartContentPickerIds"))
+                {
+                    AddingOrUpdateStartNodes(entity, assignedStartNodes, UserStartNodeDto.StartNodeTypeValue.ContentPicker, entity.StartContentPickerIds);
+                }
+                if (entity.IsPropertyDirty("StartMediaPickerIds"))
+                {
+                    AddingOrUpdateStartNodes(entity, assignedStartNodes, UserStartNodeDto.StartNodeTypeValue.MediaPicker, entity.StartMediaPickerIds);
                 }
             }
 

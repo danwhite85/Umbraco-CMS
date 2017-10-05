@@ -18,6 +18,8 @@ namespace Umbraco.Web.Models.ContentEditing
             AvailableCultures = new Dictionary<string, string>();
             StartContentIds = new List<EntityBasic>();
             StartMediaIds = new List<EntityBasic>();
+            StartContentPickerIds = new List<EntityBasic>();
+            StartMediaPickerIds = new List<EntityBasic>();
         }
         
         /// <summary>
@@ -32,6 +34,12 @@ namespace Umbraco.Web.Models.ContentEditing
 
         [DataMember(Name = "startMediaIds")]
         public IEnumerable<EntityBasic> StartMediaIds { get; set; }
+
+        [DataMember(Name = "startContentPickerIds")]
+        public IEnumerable<EntityBasic> StartContentPickerIds { get; set; }
+
+        [DataMember(Name = "startMediaPickerIds")]
+        public IEnumerable<EntityBasic> StartMediaPickerIds { get; set; }
 
         /// <summary>
         /// If the password is reset on save, this value will be populated

@@ -31,6 +31,8 @@ namespace Umbraco.Core.Models.Membership
             _isLockedOut = false;
             _startContentIds = new int[] { };
             _startMediaIds = new int[] { };
+            _startContentPickerIds = new int[] { };
+            _startMediaPickerIds = new int[] { };
             //cannot be null
             _rawPasswordValue = "";
         }
@@ -59,7 +61,9 @@ namespace Umbraco.Core.Models.Membership
             _isLockedOut = false;
             _startContentIds = new int[] { };
             _startMediaIds = new int[] { };
-            
+            _startContentPickerIds = new int[] { };
+            _startMediaPickerIds = new int[] { };
+
         }
 
         /// <summary>
@@ -73,7 +77,9 @@ namespace Umbraco.Core.Models.Membership
         /// <param name="userGroups"></param>
         /// <param name="startContentIds"></param>
         /// <param name="startMediaIds"></param>
-        public User(int id, string name, string email, string username, string rawPasswordValue, IEnumerable<IReadOnlyUserGroup> userGroups, int[] startContentIds, int[] startMediaIds)
+        /// <param name="startContentPickerIds"></param>
+        /// <param name="startMediaPickerIds"></param>
+        public User(int id, string name, string email, string username, string rawPasswordValue, IEnumerable<IReadOnlyUserGroup> userGroups, int[] startContentIds, int[] startMediaIds, int[] startContentPickerIds, int[] startMediaPickerIds)
             : this()
         {
             //we allow whitespace for this value so just check null
@@ -94,6 +100,8 @@ namespace Umbraco.Core.Models.Membership
             _isLockedOut = false;
             _startContentIds = startContentIds;
             _startMediaIds = startMediaIds;
+            _startContentPickerIds = startContentPickerIds;
+            _startMediaPickerIds = startMediaPickerIds;
         }
 
         private string _name;
@@ -102,6 +110,8 @@ namespace Umbraco.Core.Models.Membership
         private int _sessionTimeout;
         private int[] _startContentIds;
         private int[] _startMediaIds;
+        private int[] _startContentPickerIds;
+        private int[] _startMediaPickerIds;
         private int _failedLoginAttempts;
 
         private string _username;
@@ -135,6 +145,8 @@ namespace Umbraco.Core.Models.Membership
             public readonly PropertyInfo SessionTimeoutSelector = ExpressionHelper.GetPropertyInfo<User, int>(x => x.SessionTimeout);
             public readonly PropertyInfo StartContentIdSelector = ExpressionHelper.GetPropertyInfo<User, int[]>(x => x.StartContentIds);
             public readonly PropertyInfo StartMediaIdSelector = ExpressionHelper.GetPropertyInfo<User, int[]>(x => x.StartMediaIds);
+            public readonly PropertyInfo StartContentPickerIdSelector = ExpressionHelper.GetPropertyInfo<User, int[]>(x => x.StartContentPickerIds);
+            public readonly PropertyInfo StartMediaPickerIdSelector = ExpressionHelper.GetPropertyInfo<User, int[]>(x => x.StartMediaPickerIds);
             public readonly PropertyInfo NameSelector = ExpressionHelper.GetPropertyInfo<User, string>(x => x.Name);
 
             public readonly PropertyInfo UsernameSelector = ExpressionHelper.GetPropertyInfo<User, string>(x => x.Username);
@@ -529,6 +541,34 @@ namespace Umbraco.Core.Models.Membership
         {
             get { return _startMediaIds; }
             set { SetPropertyValueAndDetectChanges(value, ref _startMediaIds, Ps.Value.StartMediaIdSelector, Ps.Value.IntegerEnumerableComparer); }
+        }
+
+        /// <summary>
+        /// Gets or sets the start content picker id.
+        /// </summary>
+        /// <value>
+        /// The start content picker id.
+        /// </value>
+        [DataMember]
+        [DoNotClone]
+        public int[] StartContentPickerIds
+        {
+            get { return _startContentPickerIds; }
+            set { SetPropertyValueAndDetectChanges(value, ref _startContentPickerIds, Ps.Value.StartContentPickerIdSelector, Ps.Value.IntegerEnumerableComparer); }
+        }
+
+        /// <summary>
+        /// Gets or sets the start media picker id.
+        /// </summary>
+        /// <value>
+        /// The start media picker id.
+        /// </value>
+        [DataMember]
+        [DoNotClone]
+        public int[] StartMediaPickerIds
+        {
+            get { return _startMediaPickerIds; }
+            set { SetPropertyValueAndDetectChanges(value, ref _startMediaPickerIds, Ps.Value.StartMediaPickerIdSelector, Ps.Value.IntegerEnumerableComparer); }
         }
 
         [DataMember]

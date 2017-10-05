@@ -103,7 +103,7 @@
             formatUserPostData: function (displayModel) {
 
                 //create the save model from the display model
-                var saveModel = _.pick(displayModel, 'id', 'parentId', 'name', 'username', 'culture', 'email', 'startContentIds', 'startMediaIds', 'userGroups', 'message', 'changePassword');
+                var saveModel = _.pick(displayModel, 'id', 'parentId', 'name', 'username', 'culture', 'email', 'startContentIds', 'startMediaIds', 'startContentPickerIds', 'startMediaPickerIds', 'userGroups', 'message', 'changePassword');
                 saveModel.changePassword = this.formatChangePasswordModel(saveModel.changePassword);
 
                 //make sure the userGroups are just a string array
@@ -120,7 +120,7 @@
                 saveModel.userGroups = formattedGroups;
 
                 //make sure the startnodes are just a string array
-                var props = ["startContentIds", "startMediaIds"];
+                var props = ["startContentIds", "startMediaIds", "startContentPickerIds", "startMediaPickerIds"];
                 for (var m = 0; m < props.length; m++) {
                     var startIds = saveModel[props[m]];
                     if (!startIds) {

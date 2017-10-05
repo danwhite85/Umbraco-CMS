@@ -1652,6 +1652,8 @@ To manage your website, simply open the Umbraco back office and start adding con
     <key alias="mediastartnodehelp">Limit the media library to a specific start node</key>
     <key alias="mediastartnodes">Media start nodes</key>
     <key alias="mediastartnodeshelp">Limit the media library to specific start nodes</key>
+    <key alias="mediapickerstartnodes">Media Picker start nodes</key>
+    <key alias="mediapickerstartnodeshelp">Limit the media picker's library to specific start nodes</key>
     <key alias="modules">Sections</key>
     <key alias="noConsole">Disable Umbraco Access</key>
     <key alias="noLogin">has not logged in yet</key>
@@ -1688,6 +1690,8 @@ To manage your website, simply open the Umbraco back office and start adding con
     <key alias="startnodehelp">Limit the content tree to a specific start node</key>
     <key alias="startnodes">Content start nodes</key>
     <key alias="startnodeshelp">Limit the content tree to specific start nodes</key>
+    <key alias="pickerstartnodes">Content Picker start nodes</key>
+    <key alias="pickerstartnodeshelp">Limit the content picker's tree to specific start nodes</key>
     <key alias="sortNameAscending">Name (A-Z)</key>
     <key alias="sortNameDescending">Name (Z-A)</key>
     <key alias="sortCreateDateDescending">Newest</key>

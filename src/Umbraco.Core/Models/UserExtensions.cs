@@ -192,17 +192,32 @@ namespace Umbraco.Core.Models
             return startNodeIds.Any(x => formattedPath.Contains(string.Concat(",", x, ",")));
         }
 
-        internal static bool IsInBranchOfStartNode(this IUser user, IUmbracoEntity entity, IEntityService entityService, int recycleBinId, out bool hasPathAccess)
+        internal static bool IsInBranchOfStartNode(this IUser user, IUmbracoEntity entity, IEntityService entityService, bool isDialog, int recycleBinId, out bool hasPathAccess)
         {
-            switch (recycleBinId)
+            if(recycleBinId == Constants.System.RecycleBinMedia)
             {
-                case Constants.System.RecycleBinMedia:
+                if (isDialog)
+                {
+                    return IsInBranchOfStartNode(entity.Path, user.CalculateMediaPickerStartNodeIds(entityService), user.GetMediaPickerStartNodePaths(entityService), out hasPathAccess);
+                }
+                else
+                {
                     return IsInBranchOfStartNode(entity.Path, user.CalculateMediaStartNodeIds(entityService), user.GetMediaStartNodePaths(entityService), out hasPathAccess);
-                case Constants.System.RecycleBinContent:
-                    return IsInBranchOfStartNode(entity.Path, user.CalculateContentStartNodeIds(entityService), user.GetContentStartNodePaths(entityService), out hasPathAccess);
-                default:
-                    throw new NotSupportedException("Path access is only determined on content or media");
+                }
             }
+            else if(recycleBinId == Constants.System.RecycleBinContent)
+            {
+                if (isDialog)
+                {
+                    return IsInBranchOfStartNode(entity.Path, user.CalculateContentPickerStartNodeIds(entityService), user.GetContentPickerStartNodePaths(entityService), out hasPathAccess);
+                }
+                else
+                {
+                    return IsInBranchOfStartNode(entity.Path, user.CalculateContentStartNodeIds(entityService), user.GetContentStartNodePaths(entityService), out hasPathAccess);
+                }
+            }
+
+            throw new NotSupportedException("Path access is only determined on content or media");
         }
 
         internal static bool IsInBranchOfStartNode(string path, int[] startNodeIds, string[] startNodePaths, out bool hasPathAccess)
@@ -317,6 +332,62 @@ namespace Umbraco.Core.Models
             ToUserCache(user, cacheKey, vals);
             return vals;
         }
+
+
+
+        // calc. start nodes, combining groups' and user's, and excluding what's in the bin
+        public static int[] CalculateContentPickerStartNodeIds(this IUser user, IEntityService entityService)
+        {
+            const string cacheKey = "AllContentPickerStartNodes";
+            //try to look them up from cache so we don't recalculate
+            var valuesInUserCache = FromUserCache<int[]>(user, cacheKey);
+            if (valuesInUserCache != null) return valuesInUserCache;
+            
+            var vals = (user.StartContentPickerIds.Any()) ? user.StartContentPickerIds : user.CalculateContentStartNodeIds(entityService);
+            ToUserCache(user, cacheKey, vals);
+            return vals;
+        }
+
+        // calc. start nodes, combining groups' and user's, and excluding what's in the bin
+        public static int[] CalculateMediaPickerStartNodeIds(this IUser user, IEntityService entityService)
+        {
+            const string cacheKey = "AllMediaPickerStartNodes";
+            //try to look them up from cache so we don't recalculate
+            var valuesInUserCache = FromUserCache<int[]>(user, cacheKey);
+            if (valuesInUserCache != null) return valuesInUserCache;
+
+            var vals = (user.StartMediaPickerIds.Any()) ? user.StartMediaPickerIds : user.CalculateMediaStartNodeIds(entityService);            
+            ToUserCache(user, cacheKey, vals);
+            return vals;
+        }
+
+        public static string[] GetMediaPickerStartNodePaths(this IUser user, IEntityService entityService)
+        {
+            const string cacheKey = "MediaPickerStartNodePaths";
+            //try to look them up from cache so we don't recalculate
+            var valuesInUserCache = FromUserCache<string[]>(user, cacheKey);
+            if (valuesInUserCache != null) return valuesInUserCache;
+
+            var startNodeIds = user.CalculateMediaPickerStartNodeIds(entityService);
+            var vals = entityService.GetAllPaths(UmbracoObjectTypes.Media, startNodeIds).Select(x => x.Path).ToArray();
+            ToUserCache(user, cacheKey, vals);
+            return vals;
+        }
+
+        public static string[] GetContentPickerStartNodePaths(this IUser user, IEntityService entityService)
+        {
+            const string cacheKey = "ContentPickerStartNodePaths";
+            //try to look them up from cache so we don't recalculate
+            var valuesInUserCache = FromUserCache<string[]>(user, cacheKey);
+            if (valuesInUserCache != null) return valuesInUserCache;
+
+            var startNodeIds = user.CalculateContentPickerStartNodeIds(entityService);
+            var vals = entityService.GetAllPaths(UmbracoObjectTypes.Document, startNodeIds).Select(x => x.Path).ToArray();
+            ToUserCache(user, cacheKey, vals);
+            return vals;
+        }
+
+
 
         private static T FromUserCache<T>(IUser user, string cacheKey)
             where T: class
