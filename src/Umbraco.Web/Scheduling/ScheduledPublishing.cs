@@ -31,7 +31,7 @@ namespace Umbraco.Web.Scheduling
 
         private ILogger Logger { get { return _appContext.ProfilingLogger.Logger; } }
 
-        public override async Task<bool> PerformRunAsync(CancellationToken token)
+        public override bool PerformRun()
         {
             if (_appContext == null) return true; // repeat...
 
@@ -86,7 +86,16 @@ namespace Umbraco.Web.Scheduling
             finally
             {
                 if (tempContext != null)
+                {
+                    // because we created an http context and assigned it to UmbracoContext,
+                    // the batched messenger does batch instructions, but since there is no
+                    // request, we need to explicitely tell it to flush the batch of instrs.
+                    var batchedMessenger = ServerMessengerResolver.Current.Messenger as BatchedDatabaseServerMessenger;
+                    if (batchedMessenger != null)
+                        batchedMessenger.FlushBatch();
+
                     tempContext.Dispose(); // nulls the ThreadStatic context
+                }
             }
 
             return true; // repeat
@@ -94,7 +103,7 @@ namespace Umbraco.Web.Scheduling
 
         public override bool IsAsync
         {
-            get { return true; }
+            get { return false; }
         }
     }
 }
